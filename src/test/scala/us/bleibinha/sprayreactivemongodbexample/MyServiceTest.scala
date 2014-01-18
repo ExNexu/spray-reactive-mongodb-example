@@ -31,7 +31,7 @@ class MyServiceTest
     it("should return OK on a put request (successful database insert)") {
       when(lastError.code).thenReturn(None)
 
-      Put() ~> myRoute ~> check {
+      Put("/test") ~> myRoute ~> check {
         response.status should be(StatusCodes.OK)
       }
 
@@ -41,7 +41,7 @@ class MyServiceTest
     it("should return InternalServerError on a put request (unsuccessful database insert)") {
       when(lastError.code).thenReturn(Some(1))
 
-      Put() ~> myRoute ~> check {
+      Put("/test") ~> myRoute ~> check {
         response.status should be(StatusCodes.InternalServerError)
       }
 

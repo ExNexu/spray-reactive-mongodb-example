@@ -33,7 +33,7 @@ class MyServiceIntTest
 
       val resultsBefore = Await.result(resultBeforeList, 5 seconds).size
 
-      Put() ~> myRoute ~> check {
+      Put("/test") ~> myRoute ~> check {
         response.status should be(StatusCodes.OK)
       }
 

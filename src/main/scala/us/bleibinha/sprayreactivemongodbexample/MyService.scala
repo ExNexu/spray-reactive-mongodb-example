@@ -17,7 +17,7 @@ class MyServiceActor extends Actor with MyService {
 trait MyService extends HttpService {
 
   lazy val myRoute =
-    path("") {
+    path("test") {
       put {
         complete {
           val saveResultCode: Future[Option[Int]] = save() map (_.code)
