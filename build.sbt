@@ -24,6 +24,7 @@ libraryDependencies ++= {
     "com.typesafe.akka"   %%  "akka-actor"    % akkaV,
     "com.typesafe.akka"   %%  "akka-testkit"  % akkaV,
     "org.reactivemongo" %% "reactivemongo" % "0.11.0-SNAPSHOT",
+    "io.spray" %%  "spray-json" % "1.2.5",
     "org.scalatest" %% "scalatest" % "1.9.2" % "test",
     "org.mockito" % "mockito-all" % "1.9.5" % "test"
   )
