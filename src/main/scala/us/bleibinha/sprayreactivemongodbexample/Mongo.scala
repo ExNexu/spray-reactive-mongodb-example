@@ -6,8 +6,9 @@ import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.api.MongoDriver
 
 trait Mongo {
+  import Akka.actorSystem
 
-  private val driver = new MongoDriver
+  private val driver = new MongoDriver(actorSystem)
   private val connection = driver.connection(List("localhost"))
   private val db = connection("sprayreactivemongodbexample")
 
