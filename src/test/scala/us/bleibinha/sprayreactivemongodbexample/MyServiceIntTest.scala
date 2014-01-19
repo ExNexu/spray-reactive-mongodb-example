@@ -7,6 +7,7 @@ import scala.concurrent.Future
 import models.Person
 import models.Person.personJsonFormat
 import Mongo.Persons
+import org.scalatest.BeforeAndAfter
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
 import reactivemongo.bson.BSONDocument
@@ -19,6 +20,7 @@ import spray.testkit.ScalatestRouteTest
 class MyServiceIntTest
     extends FunSpec
     with ShouldMatchers
+    with BeforeAndAfter
     with ScalatestRouteTest
     with MyService {
 
@@ -62,6 +64,22 @@ class MyServiceIntTest
       }
     }
 
+    describe("DELETE") {
+
+      it("should return OK and remove all entities from the collection") {
+
+        Await.result(Persons.add(person), 5 seconds)
+
+        Delete("/person") ~> myRoute ~> check {
+          response.status should be(StatusCodes.OK)
+          responseAs[String] should be("OK")
+        }
+
+        val resultsAfter = Await.result(Persons.count(), 5 seconds)
+        resultsAfter should be(0)
+      }
+    }
+
     describe("GET") {
 
       it("should be able to find a person by their Id") {
@@ -85,5 +103,9 @@ class MyServiceIntTest
         }
       }
     }
+  }
+
+  before {
+    Await.result(Persons.removeAll(), 5 seconds)
   }
 }

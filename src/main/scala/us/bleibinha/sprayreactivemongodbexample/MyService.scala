@@ -52,6 +52,14 @@ trait MyService extends HttpService {
               }
             }
           }
+        } ~
+        delete {
+          detach() {
+            dynamic {
+              Persons.removeAll()
+              complete(StatusCodes.OK)
+            }
+          }
         }
     }
 }

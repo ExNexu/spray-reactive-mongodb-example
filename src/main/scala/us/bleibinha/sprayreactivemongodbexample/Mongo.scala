@@ -4,6 +4,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import reactivemongo.api.collections.default.BSONCollection
+import reactivemongo.bson.BSONDocument
 import reactivemongo.api.MongoDriver
 import spray.json.RootJsonFormat
 import sprest.Formats._
@@ -19,7 +20,7 @@ trait Mongo extends ReactiveMongoPersistence {
   private val connection = driver.connection(List("localhost"))
   private val db = connection("sprayreactivemongodbexample")
 
-  // Json mapping to / from BSON - in this case we want "_id" from BSON to be 
+  // Json mapping to / from BSON - in this case we want "_id" from BSON to be
   // mapped to "id" in JSON in all cases
   implicit object JsonTypeMapper extends SprayJsonTypeMapper with NormalizedIdTransformer
 
@@ -31,6 +32,9 @@ trait Mongo extends ReactiveMongoPersistence {
     override protected def addImpl(m: M)(implicit ec: ExecutionContext) = doAdd(m)
     override protected def updateImpl(m: M)(implicit ec: ExecutionContext) = doUpdate(m)
     override def remove(selector: Selector)(implicit ec: ExecutionContext) = uncheckedRemoveById(selector.id)
+
+    val collection = db(collName)
+    def removeAll()(implicit ec: ExecutionContext) = collection.remove(BSONDocument())
   }
 
   // MongoDB collections:
