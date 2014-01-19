@@ -26,7 +26,7 @@ class MyServiceTest
   val lastError = mock[LastError]
   override def save() = Future.successful(lastError)
 
-  describe("MyService") {
+  describe("MyService - test") {
 
     it("should return OK on a put request (successful database insert)") {
       when(lastError.code).thenReturn(None)
