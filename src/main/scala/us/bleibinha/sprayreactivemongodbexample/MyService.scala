@@ -24,24 +24,7 @@ class MyServiceActor extends Actor with MyService {
 
 trait MyService extends HttpService {
 
-  private lazy val test1 =
-    path("test") {
-      put {
-        complete {
-          val saveResultCode: Future[Option[Int]] = save() map (_.code)
-          saveResultCode map {
-            _ match {
-              case Some(_) ⇒
-                StatusCodes.InternalServerError
-              case None ⇒
-                StatusCodes.OK
-            }
-          }
-        }
-      }
-    }
-
-  private lazy val personRoute =
+  lazy val myRoute =
     path("person") {
       put {
         entity(as[Person]) { person ⇒
@@ -71,13 +54,4 @@ trait MyService extends HttpService {
           }
         }
     }
-
-  lazy val myRoute = test1 ~ personRoute
-
-  protected lazy val testCollection = Mongo.testCollection
-
-  protected def save(): Future[LastError] = {
-    val bsonDocument = BSONDocument("firstName" -> "Jack")
-    testCollection.insert(bsonDocument)
-  }
 }

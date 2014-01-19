@@ -24,36 +24,6 @@ class MyServiceIntTest
 
   def actorRefFactory = system
 
-  describe("MyService - test") {
-
-    it("should return OK on a put request and perform a databse insert") {
-
-      val query = BSONDocument("firstName" -> "Jack")
-
-      val resultBeforeList: Future[List[BSONDocument]] =
-        testCollection.
-          find(query).
-          cursor[BSONDocument].
-          collect[List]()
-
-      val resultsBefore = Await.result(resultBeforeList, 5 seconds).size
-
-      Put("/test") ~> myRoute ~> check {
-        response.status should be(StatusCodes.OK)
-      }
-
-      val resultAfterList: Future[List[BSONDocument]] =
-        testCollection.
-          find(query).
-          cursor[BSONDocument].
-          collect[List]()
-
-      val resultsAfter = Await.result(resultAfterList, 5 seconds).size
-
-      resultsAfter should be(resultsBefore + 1)
-    }
-  }
-
   describe("MyService - person") {
 
     val personName = "Peter"

@@ -19,8 +19,6 @@ trait Mongo extends ReactiveMongoPersistence {
   private val connection = driver.connection(List("localhost"))
   private val db = connection("sprayreactivemongodbexample")
 
-  val testCollection = db("test")
-
   // Json mapping to / from BSON - in this case we want "_id" from BSON to be 
   // mapped to "id" in JSON in all cases
   implicit object JsonTypeMapper extends SprayJsonTypeMapper with NormalizedIdTransformer
