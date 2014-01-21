@@ -34,7 +34,8 @@ trait Mongo extends ReactiveMongoPersistence {
     override def remove(selector: Selector)(implicit ec: ExecutionContext) = uncheckedRemoveById(selector.id)
 
     val collection = db(collName)
-    def removeAll()(implicit ec: ExecutionContext) = collection.remove(BSONDocument())
+    def removeAll()(implicit ec: ExecutionContext) = collection.remove(BSONDocument.empty)
+    def findAll()(implicit ec: ExecutionContext) = find(BSONDocument.empty)
   }
 
   // MongoDB collections:

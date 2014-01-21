@@ -35,23 +35,30 @@ trait MyService extends HttpService {
           }
         }
       } ~
-        parameters('id.as[String]) { id ⇒
-          detach() {
-            complete {
-              val person = Persons.findById(id)
-              person map { person ⇒
-                person match {
-                  case Some(person) ⇒
-                    HttpResponse(
-                      StatusCodes.OK,
-                      HttpEntity(ContentTypes.`application/json`, person.toJson.prettyPrint)
-                    )
-                  case None ⇒
-                    HttpResponse(StatusCodes.BadRequest)
+        get {
+          parameters('id.as[String]) { id ⇒
+            detach() {
+              complete {
+                val person = Persons.findById(id)
+                person map { person ⇒
+                  person match {
+                    case Some(person) ⇒
+                      HttpResponse(
+                        StatusCodes.OK,
+                        HttpEntity(ContentTypes.`application/json`, person.toJson.prettyPrint)
+                      )
+                    case None ⇒
+                      HttpResponse(StatusCodes.BadRequest)
+                  }
                 }
               }
             }
-          }
+          } ~
+            detach() {
+              complete {
+                Persons.findAll()
+              }
+            }
         } ~
         delete {
           detach() {

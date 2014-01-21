@@ -26,11 +26,15 @@ class MyServiceIntTest
 
   def actorRefFactory = system
 
-  describe("MyService - person") {
+  val personName = "Peter"
+  val personAge = 23
+  var person = Person(personName, personAge)
 
-    val personName = "Peter"
-    val personAge = 23
-    val person = Person(personName, personAge)
+  val person2Name = "Mareike"
+  val person2Age = 27
+  var person2 = Person(person2Name, person2Age)
+
+  describe("MyService - person") {
 
     describe("PUT") {
 
@@ -82,6 +86,23 @@ class MyServiceIntTest
 
     describe("GET") {
 
+      it("should be able to get all persons") {
+
+        val persistedPerson = Await.result(Persons.add(person), 5 seconds)
+        persistedPerson.id should be('defined)
+
+        val persistedPerson2 = Await.result(Persons.add(person2), 5 seconds)
+        persistedPerson2.id should be('defined)
+
+        val persistedPersons = Set(person, person2)
+
+        Get(s"/person") ~> myRoute ~> check {
+          response.status should be(StatusCodes.OK)
+          val responsePersons = responseAs[Set[Person]]
+          responsePersons should be(persistedPersons)
+        }
+      }
+
       it("should be able to find a person by their Id") {
 
         val persistedPerson = Await.result(Persons.add(person), 5 seconds)
@@ -106,6 +127,8 @@ class MyServiceIntTest
   }
 
   before {
+    person = Person(personName, personAge)
+    person2 = Person(person2Name, person2Age)
     Await.result(Persons.removeAll(), 5 seconds)
   }
 }
