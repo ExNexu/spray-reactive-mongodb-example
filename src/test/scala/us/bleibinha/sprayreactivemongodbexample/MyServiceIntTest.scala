@@ -120,6 +120,30 @@ class MyServiceIntTest
           }
         }
 
+        it("should be able to find multiple persons by their common name") {
+          val persistedPerson = Await.result(Persons.add(person), 5 seconds)
+          persistedPerson.id should be('defined)
+
+          val persistedPerson2 = Await.result(Persons.add(person2.copy(name = personName)), 5 seconds)
+          persistedPerson2.id should be('defined)
+
+          Get(s"/person?name=$personName") ~> myRoute ~> check {
+            response.status should be(StatusCodes.OK)
+            val responsePersons = responseAs[List[Person]]
+            responsePersons.size should be(2)
+            responsePersons should contain(persistedPerson)
+            responsePersons should contain(persistedPerson2)
+          }
+        }
+
+        it("should return a empty list if no person with that name could be found") {
+          Get(s"/person?name=$personName") ~> myRoute ~> check {
+            response.status should be(StatusCodes.OK)
+            val responsePersons = responseAs[List[Person]]
+            responsePersons.size should be(0)
+          }
+        }
+
         it("should be able to find a person by their age") {
           val persistedPerson = Await.result(Persons.add(person), 5 seconds)
           persistedPerson.id should be('defined)
@@ -132,6 +156,30 @@ class MyServiceIntTest
             val responsePersons = responseAs[List[Person]]
             responsePersons.size should be(1)
             responsePersons(0) should be(persistedPerson2)
+          }
+        }
+
+        it("should be able to find multiple persons by their common age") {
+          val persistedPerson = Await.result(Persons.add(person), 5 seconds)
+          persistedPerson.id should be('defined)
+
+          val persistedPerson2 = Await.result(Persons.add(person2.copy(age = personAge)), 5 seconds)
+          persistedPerson2.id should be('defined)
+
+          Get(s"/person?age=$personAge") ~> myRoute ~> check {
+            response.status should be(StatusCodes.OK)
+            val responsePersons = responseAs[List[Person]]
+            responsePersons.size should be(2)
+            responsePersons should contain(persistedPerson)
+            responsePersons should contain(persistedPerson2)
+          }
+        }
+
+        it("should return a empty list if no person with that age could be found") {
+          Get(s"/person?age=$personAge") ~> myRoute ~> check {
+            response.status should be(StatusCodes.OK)
+            val responsePersons = responseAs[List[Person]]
+            responsePersons.size should be(0)
           }
         }
 
