@@ -27,46 +27,56 @@ trait MyService extends HttpService {
   lazy val myRoute =
     path("person") {
       put {
-        entity(as[Person]) { person ⇒
-          detach() {
-            complete {
-              Persons.add(person)
-            }
-          }
-        }
+        putRoute
       } ~
         get {
-          parameters('id.as[String]) { id ⇒
-            detach() {
-              complete {
-                val person = Persons.findById(id)
-                person map { person ⇒
-                  person match {
-                    case Some(person) ⇒
-                      HttpResponse(
-                        StatusCodes.OK,
-                        HttpEntity(ContentTypes.`application/json`, person.toJson.prettyPrint)
-                      )
-                    case None ⇒
-                      HttpResponse(StatusCodes.BadRequest)
-                  }
-                }
-              }
-            }
-          } ~
-            detach() {
-              complete {
-                Persons.findAll()
-              }
-            }
+          getRoute
         } ~
         delete {
-          detach() {
-            dynamic {
-              Persons.removeAll()
-              complete(StatusCodes.OK)
+          deleteRoute
+        }
+    }
+
+  protected lazy val putRoute =
+    entity(as[Person]) { person ⇒
+      detach() {
+        complete {
+          Persons.add(person)
+        }
+      }
+    }
+
+  protected lazy val getRoute =
+    parameters('id.as[String]) { id ⇒
+      detach() {
+        complete {
+          val person = Persons.findById(id)
+          person map { person ⇒
+            person match {
+              case Some(person) ⇒
+                HttpResponse(
+                  StatusCodes.OK,
+                  HttpEntity(ContentTypes.`application/json`, person.toJson.prettyPrint)
+                )
+              case None ⇒
+                HttpResponse(StatusCodes.BadRequest)
             }
           }
         }
+      }
+    } ~
+      detach() {
+        complete {
+          Persons.findAll()
+        }
+      }
+
+  protected lazy val deleteRoute =
+    detach() {
+      dynamic {
+        Persons.removeAll()
+        complete(StatusCodes.OK)
+      }
     }
+
 }
