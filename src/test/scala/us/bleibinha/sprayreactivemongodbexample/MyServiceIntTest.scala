@@ -103,24 +103,42 @@ class MyServiceIntTest
         }
       }
 
-      it("should be able to find a person by their Id") {
+      describe("find a subset of persons by their Id, name or age") {
 
-        val persistedPerson = Await.result(Persons.add(person), 5 seconds)
-        persistedPerson.id should be('defined)
-        val persistId = persistedPerson.id.get
+        it("should be able to find a person by their name") {
+          val persistedPerson = Await.result(Persons.add(person), 5 seconds)
+          persistedPerson.id should be('defined)
 
-        Get(s"/person?id=$persistId") ~> myRoute ~> check {
-          response.status should be(StatusCodes.OK)
-          val responsePerson = responseAs[Person]
-          responsePerson should be(persistedPerson)
+          val persistedPerson2 = Await.result(Persons.add(person2), 5 seconds)
+          persistedPerson2.id should be('defined)
+
+          Get(s"/person?name=$personName") ~> myRoute ~> check {
+            response.status should be(StatusCodes.OK)
+            val responsePersons = responseAs[List[Person]]
+            responsePersons.size should be(1)
+            responsePersons(0) should be(persistedPerson)
+          }
         }
-      }
 
-      it("should answer with a BadRequest if the person could not be found") {
-        val nonexistentId = "does_not_exist"
-        Get(s"/person?id=$nonexistentId") ~> myRoute ~> check {
-          response.status should be(StatusCodes.BadRequest)
-          response.entity should be(Empty)
+        it("should be able to find a person by their Id") {
+
+          val persistedPerson = Await.result(Persons.add(person), 5 seconds)
+          persistedPerson.id should be('defined)
+          val persistId = persistedPerson.id.get
+
+          Get(s"/person?id=$persistId") ~> myRoute ~> check {
+            response.status should be(StatusCodes.OK)
+            val responsePerson = responseAs[Person]
+            responsePerson should be(persistedPerson)
+          }
+        }
+
+        it("should answer with a BadRequest if the person could not be found") {
+          val nonexistentId = "does_not_exist"
+          Get(s"/person?id=$nonexistentId") ~> myRoute ~> check {
+            response.status should be(StatusCodes.BadRequest)
+            response.entity should be(Empty)
+          }
         }
       }
     }

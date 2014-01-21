@@ -65,6 +65,13 @@ trait MyService extends HttpService {
         }
       }
     } ~
+      parameters('name.as[String]) { name ⇒
+        detach() {
+          complete {
+            Persons.findByName(name)
+          }
+        }
+      } ~
       detach() {
         complete {
           Persons.findAll()

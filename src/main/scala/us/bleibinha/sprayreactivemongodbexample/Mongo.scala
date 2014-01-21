@@ -33,14 +33,16 @@ trait Mongo extends ReactiveMongoPersistence {
     override protected def updateImpl(m: M)(implicit ec: ExecutionContext) = doUpdate(m)
     override def remove(selector: Selector)(implicit ec: ExecutionContext) = uncheckedRemoveById(selector.id)
 
-    val collection = db(collName)
+    protected val collection = db(collName)
     def removeAll()(implicit ec: ExecutionContext) = collection.remove(BSONDocument.empty)
     def findAll()(implicit ec: ExecutionContext) = find(BSONDocument.empty)
   }
 
   // MongoDB collections:
   import models._
-  object Persons extends UnsecuredDAO[Person]("persons") with UUIDStringId
+  object Persons extends UnsecuredDAO[Person]("persons") with UUIDStringId {
+    def findByName(name: String)(implicit ec: ExecutionContext) = find(BSONDocument("name" → name))
+  }
 
 }
 object Mongo extends Mongo
