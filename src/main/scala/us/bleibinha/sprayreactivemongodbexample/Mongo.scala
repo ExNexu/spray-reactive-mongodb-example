@@ -42,6 +42,7 @@ trait Mongo extends ReactiveMongoPersistence {
   import models._
   object Persons extends UnsecuredDAO[Person]("persons") with UUIDStringId {
     def findByName(name: String)(implicit ec: ExecutionContext) = find(BSONDocument("name" → name))
+    def findByAge(age: Int)(implicit ec: ExecutionContext) = find(BSONDocument("age" → age))
   }
 
 }

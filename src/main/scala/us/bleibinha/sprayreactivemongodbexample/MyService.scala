@@ -72,6 +72,13 @@ trait MyService extends HttpService {
           }
         }
       } ~
+      parameters('age.as[Int]) { age ⇒
+        detach() {
+          complete {
+            Persons.findByAge(age)
+          }
+        }
+      } ~
       detach() {
         complete {
           Persons.findAll()
