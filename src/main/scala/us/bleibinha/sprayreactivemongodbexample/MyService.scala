@@ -13,7 +13,8 @@ import spray.http.ContentTypes
 import spray.http.HttpEntity
 import spray.http.HttpResponse
 import spray.http.StatusCodes
-import spray.httpx.SprayJsonSupport._
+import spray.httpx.SprayJsonSupport.sprayJsonMarshaller
+import spray.httpx.SprayJsonSupport.sprayJsonUnmarshaller
 import spray.json.pimpAny
 import spray.routing.HttpService
 

@@ -1,7 +1,7 @@
 package us.bleibinha.sprayreactivemongodbexample
 
 import scala.concurrent.Await
-import scala.concurrent.duration._
+import scala.concurrent.duration.DurationInt
 import scala.concurrent.Future
 
 import models.Person
@@ -14,7 +14,8 @@ import reactivemongo.bson.BSONDocument
 import reactivemongo.core.commands.LastError
 import spray.http.HttpEntity.Empty
 import spray.http.StatusCodes
-import spray.httpx.SprayJsonSupport._
+import spray.httpx.SprayJsonSupport.sprayJsonMarshaller
+import spray.httpx.SprayJsonSupport.sprayJsonUnmarshaller
 import spray.testkit.ScalatestRouteTest
 
 class MyServiceIntTest

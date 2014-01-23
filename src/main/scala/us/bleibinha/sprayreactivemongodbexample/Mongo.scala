@@ -4,14 +4,15 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.BSONDocument
 import reactivemongo.api.MongoDriver
+import reactivemongo.bson.BSONDocument
 import spray.json.RootJsonFormat
-import sprest.Formats._
 import sprest.models.UniqueSelector
 import sprest.models.UUIDStringId
-import sprest.reactivemongo.typemappers._
-import sprest.reactivemongo.{ ReactiveMongoPersistence, BsonProtocol }
+import sprest.reactivemongo.BsonProtocol
+import sprest.reactivemongo.ReactiveMongoPersistence
+import sprest.reactivemongo.typemappers.NormalizedIdTransformer
+import sprest.reactivemongo.typemappers.SprayJsonTypeMapper
 
 trait Mongo extends ReactiveMongoPersistence {
   import Akka.actorSystem

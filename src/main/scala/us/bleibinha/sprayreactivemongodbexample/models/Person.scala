@@ -1,8 +1,9 @@
 package us.bleibinha.sprayreactivemongodbexample.models
 
-import spray.json._
-import sprest.models._
-import sprest.reactivemongo.typemappers._
+import spray.json.DefaultJsonProtocol.jsonFormat3
+import sprest.models.Model
+import sprest.models.ModelCompanion
+import sprest.reactivemongo.typemappers.jsObjectBSONDocumentWriter
 
 case class Person(
   name: String,
