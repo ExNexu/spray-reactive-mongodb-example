@@ -25,7 +25,8 @@ trait Mongo extends ReactiveMongoPersistence {
   // mapped to "id" in JSON in all cases
   implicit object JsonTypeMapper extends SprayJsonTypeMapper with NormalizedIdTransformer
 
-  abstract class UnsecuredDAO[M <: sprest.models.Model[String]](collName: String)(implicit jsformat: RootJsonFormat[M]) extends CollectionDAO[M, String](db(collName)) {
+  abstract class UnsecuredDAO[M <: sprest.models.Model[String]](collName: String)(implicit jsformat: RootJsonFormat[M])
+      extends CollectionDAO[M, String](db(collName)) {
 
     case class Selector(id: String) extends UniqueSelector[M, String]
 
