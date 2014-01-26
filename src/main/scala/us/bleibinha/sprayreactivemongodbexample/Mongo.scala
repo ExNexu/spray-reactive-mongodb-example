@@ -46,6 +46,5 @@ trait Mongo extends ReactiveMongoPersistence {
     def findByName(name: String)(implicit ec: ExecutionContext) = find(BSONDocument("name" → name))
     def findByAge(age: Int)(implicit ec: ExecutionContext) = find(BSONDocument("age" → age))
   }
-
 }
 object Mongo extends Mongo

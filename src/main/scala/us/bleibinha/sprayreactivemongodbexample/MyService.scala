@@ -93,5 +93,4 @@ trait MyService extends HttpService {
         complete(StatusCodes.OK)
       }
     }
-
 }
